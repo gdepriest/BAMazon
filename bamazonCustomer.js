@@ -137,6 +137,8 @@ function buyBamazon() {
                             
                         });
         
+                    } else {
+                        buyBamazon();
                     };
 
 
