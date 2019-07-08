@@ -1,8 +1,6 @@
 var inquirer = require("inquirer");
 var mysql = require("mysql");
 
-var productSpacer = "******************************************"
-
 var connection = mysql.createConnection({
     host: "localhost",
   
@@ -63,7 +61,7 @@ function shopByDept() {
                 Price: $${res[i].price} \n 
                 Item ID: ${res[i].item_id} \n
                 ${res[i].stock_quantity} left in stock! \n`);
-                console.log(productSpacer);
+                console.log("\n--------------------------------\n\n");
             }   
           buyBamazon();
         })
@@ -78,9 +76,10 @@ function showAll() {
     connection.query(query, function(err, res) {
         if (err) throw err;
         for (i=0; i<res.length; i++) {
-            console.log(`${res[i].product_name.toUpperCase()}  ||  Price: $${res[i].price} ||  Item ID: ${res[i].item_id}   ||  ${res[i].stock_quantity} left in stock.`);
-            console.log(productSpacer);
+            console.log(` ${res[i].product_name.toUpperCase()}  |  Price: $${res[i].price} |  Item ID: ${res[i].item_id}   |  ${res[i].stock_quantity} left in stock \n`);
+            console.log("--------------------------------\n");
         }
+        buyBamazon();
     })
 
 }
@@ -121,7 +120,7 @@ function buyBamazon() {
                 console.log(`Apologies! BAMazon currently has only ${res[0].stock_quantity} ${res[0].product_name}s left in stock.  Please choose a different amount.`)
                 buyBamazon();
             }else {
-                console.log(`Your total comes to $${res[0].price * answers.quantity}`);
+                console.log(`\n\nYour total comes to $${parseFloat(res[0].price * parseInt(answers.quantity)).toFixed(2)}\n\n`);
                 inquirer.prompt({
                     name: "checkout",
                     message: "Do you want to proceed?",
