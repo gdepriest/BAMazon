@@ -1,0 +1,25 @@
+{
+  "name": "BAMazon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bamazonCustomer.js",
+  "dependencies": {
+    "inquirer": "^6.4.1",
+    "mysql": "^2.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gdepriest/BAMazon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gdepriest/BAMazon/issues"
+  },
+  "homepage": "https://github.com/gdepriest/BAMazon#readme"
+}
