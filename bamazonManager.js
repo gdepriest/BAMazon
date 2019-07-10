@@ -131,4 +131,57 @@ function stockShelves() {
     })
 }        
      
-    
+function createNew() {
+    console.log(`\n Create New Product \n`)
+    inquirer.prompt([
+        {
+            name: "product_name",
+            message: "Enter the name of the product:",
+
+        },
+        {
+            name: "department_name",
+            type: "list",
+            choices: ["Electronics", "Accessories", "Travel", "Movies, Music & Games", "Office", "Services", "Outdoor", "Kitchen", "Pharmacy/Cosmetics"],
+            message: "Choose a department:",
+
+        },
+        {
+            name: "price",
+            message: "Enter the price per unit:",
+            validate: function(value) {
+                if (isNaN(value)) {
+                    return "Please enter the price, 123.45."
+                };
+                
+                return true;
+            },
+
+        },
+        {
+            name: "stock_quantity",
+            message: "Enter the stock quantity:",
+            validate: function(value) {
+                if (isNaN(value)) {
+                    return "Please enter a number."
+                };
+
+                return true;
+            }
+        }
+    ]).then(function(answers) { 
+        
+
+        connection.query("INSERT INTO products SET ?", {
+            product_name: answers.product_name, 
+            department_name: answers.department_name, 
+            price: parseFloat(answers.price), 
+            stock_quantity: parseInt(answers.stock_quantity)}, function(err) {
+            if (err) throw err;
+            console.log(`\n\n New product successfully added: \n ${answers.product_name.toUpperCase()} - Department: ${answers.department_name} - Price: $${answers.price} - Quantity: ${answers.stock_quantity}`);
+
+            mainMenu();
+        })  
+
+    })
+};
