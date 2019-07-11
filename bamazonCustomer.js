@@ -43,30 +43,46 @@ function runBamazon() {
 }
 
 function shopByDept() {
-    inquirer.prompt({
-        type: "list",
-        name: "department",
-        message: "Please choose a department from the following list:",
-        choices: ["Electronics", "Accessories", "Travel", "Movies, Music & Games", "Office", "Services", "Outdoor", "Kitchen", "Pharmacy/Cosmetics"],
-    })
-    .then(function(answer) {
-        var query = "SELECT products.item_id, products.product_name, products.price, products.stock_quantity FROM products WHERE products.department_name = ?"
-        console.log(`\n ${answer.department.toUpperCase()}`);
-        connection.query(query, [answer.department], function(err, res) {
-            if (err) throw err;
-            console.log(`\n ${res.length} products found! \n ___________ \n`)
+    connection.query("SELECT * FROM products", function(err, res) {
+        if (err) throw err;
 
-            for (i=0; i<res.length; i++) {
-                console.log(`\n Product: ${res[i].product_name.toUpperCase()} \n 
-                Price: $${res[i].price} \n 
-                Item ID: ${res[i].item_id} \n
-                ${res[i].stock_quantity} left in stock! \n`);
-                console.log("\n--------------------------------\n\n");
-            }   
-          buyBamazon();
+        inquirer.prompt({
+            type: "list",
+            name: "department",
+            message: "Please choose a department from the following list:",
+            choices: function() {
+
+                var departments = res.map(function(product) {
+                    return product.department_name
+                });
+                
+
+                return departments.filter(function(item, index){
+                    return departments.indexOf(item) >= index;
+                });
+            }
         })
+        .then(function(answer) {
+            var query = "SELECT products.item_id, products.product_name, products.price, products.stock_quantity FROM products WHERE products.department_name = ?"
+            console.log(`\n ${answer.department.toUpperCase()}`);
+            connection.query(query, [answer.department], function(err, res) {
+                if (err) throw err;
+                console.log(`\n ${res.length} products found! \n ___________ \n`)
+    
+                for (i=0; i<res.length; i++) {
+                    console.log(`\n Product: ${res[i].product_name.toUpperCase()} \n 
+                    Price: $${res[i].price} \n 
+                    Item ID: ${res[i].item_id} \n
+                    ${res[i].stock_quantity} left in stock! \n`);
+                    console.log("\n--------------------------------\n\n");
+                }   
+              buyBamazon();
+            })
+    
+        });
+    })
 
-    });
+    
    
 };
 
