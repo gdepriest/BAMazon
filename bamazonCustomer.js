@@ -158,9 +158,9 @@ function buyBamazon() {
                         buyBamazon();
                     };
 
-                })
-            }
+                });
+            };
 
-        })
-    })
+        });
+    });
 }

@@ -53,5 +53,34 @@ function salesByDept() {
 }
 
 function newDept() {
-    
+    connection.query("SELECT * FROM departments", function(err, res) {
+        if (err) throw err;
+        console.log(`\nCreate New Department \n`);
+        inquirer.prompt([
+            {
+                name: "deptName",
+                message: "Enter the name of the department:",
+            },
+            {
+                name: "overHead",
+                
+                message: "Enter the overhead cost: <123.45>",
+            }
+        ]).then(function(answers) {
+            
+            connection.query("INSERT INTO departments SET ?", {
+                department_name: answers.deptName,
+                over_head_costs: parseFloat(answers.overHead)}, function(err) {
+                if (err) throw err;
+                console.log(`\n\n New department - ${answers.deptName.toUpperCase()} - successfully added.\n\n`);
+
+                mainMenu();
+
+            });
+
+            
+           
+        });
+    });
 }
+

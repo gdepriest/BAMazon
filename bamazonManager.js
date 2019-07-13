@@ -133,7 +133,7 @@ function stockShelves() {
      
 function createNew() {
 
-    connection.query("SELECT * FROM products", function(err, res) {
+    connection.query("SELECT * FROM products, departments", function(err, res) {
 
         console.log(`\n Create New Product \n`)
         inquirer.prompt([
@@ -189,7 +189,8 @@ function createNew() {
                 product_name: answers.product_name, 
                 department_name: answers.department_name, 
                 price: parseFloat(answers.price), 
-                stock_quantity: parseInt(answers.stock_quantity)}, function(err) {
+                stock_quantity: parseInt(answers.stock_quantity),
+                product_sales: 0}, function(err) {
                 if (err) throw err;
                 console.log(`\n\n New product successfully added: \n ${answers.product_name.toUpperCase()} - Department: ${answers.department_name} - Price: $${answers.price} - Quantity: ${answers.stock_quantity}\n\n`);
 
