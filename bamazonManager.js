@@ -49,7 +49,7 @@ function mainMenu() {
 }
 
 function showAll() {
-    var query = "SELECT products.item_id, products.product_name, products.price, products.stock_quantity FROM products";
+    var query = "SELECT * FROM products";
     console.log(`\n All BAMazon Products \n`);
     connection.query(query, function(err, res) {
         if (err) throw err;
@@ -60,7 +60,7 @@ function showAll() {
 }
 
 function seeLow() {
-    var query2 = "SELECT products.item_id, products.product_name, products.price, products.stock_quantity FROM products WHERE products.stock_quantity<=5";
+    var query2 = "SELECT * FROM products WHERE products.stock_quantity<=5";
     console.log(`\n\nBAMazon stock running low...\n\n`)
     connection.query(query2, function (err, res) {
         if (err) throw err;

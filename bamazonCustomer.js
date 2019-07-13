@@ -126,12 +126,13 @@ function buyBamazon() {
             },
         },
     ]).then(function(answers) {
-        var query1 = "SELECT products.item_id, products.product_name, products.price, products.stock_quantity  FROM products WHERE products.item_id = ?";
+        var query1 = "SELECT * FROM products WHERE products.item_id = ?";
         var query2 = "UPDATE products SET ? WHERE products.item_id = ?";
 
         connection.query(query1, [parseInt(answers.productID)], function(err, res) {
             if (err) throw err; 
             var stockDiff = res[0].stock_quantity - parseInt(answers.quantity);
+            var prodSales = res[0].product_sales + (parseFloat(res[0].price * parseInt(answers.quantity)).toFixed(2));
             if (stockDiff < 0) {
                 console.log(`Apologies! BAMazon currently has only ${res[0].stock_quantity} ${res[0].product_name}s left in stock.  Please choose a different amount.`)
                 buyBamazon();
@@ -145,7 +146,7 @@ function buyBamazon() {
                 }).then(function(answer) {
 
                     if (answer.checkout) {                        
-                        connection.query(query2, [{stock_quantity: stockDiff }, parseInt(answers.productID)], function(err, res) {
+                        connection.query(query2, [{stock_quantity: stockDiff, product_sales: prodSales }, parseInt(answers.productID)], function(err, res) {
                             if (err) throw err;
 
                             console.log(`\n\n\n*****************************\n\n Thanks for your purchase! \n\n*****************************\n\n\n`);
