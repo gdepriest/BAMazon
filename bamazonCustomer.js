@@ -25,7 +25,7 @@ function runBamazon() {
         type: "list",
         name: "firstChoice",
         message: "Welcome to BAMazon, how would you like to shop?",
-        choices: ["Shop by Department", "See All Products", "Exit"],
+        choices: ["Shop by Department", "See All Products", "Bargain Bin", "Exit"],
 
     }).then(function(answer) {
         switch(answer.firstChoice) {
@@ -34,6 +34,9 @@ function runBamazon() {
             break;
             case "See All Products":
                 showAll();
+            break;
+            case "Bargain Bin":
+                bargain();
             break;
             case "Exit":
                 connection.end();
@@ -70,7 +73,7 @@ function shopByDept() {
                 console.log(`\n ${res.length} products found! \n ___________ \n`)
     
                 for (i=0; i<res.length; i++) {
-                    console.log(`\n Product: ${res[i].product_name.toUpperCase()} \n 
+                    console.log(`\n ${res[i].product_name.toUpperCase()} \n 
                     Price: $${res[i].price} \n 
                     Item ID: ${res[i].item_id}`);
                     if (res[i].stock_quantity <= 5) {
@@ -103,6 +106,21 @@ function showAll() {
         buyBamazon();
     })
 
+}
+
+function bargain() {
+    connection.query("SELECT products.item_id, products.product_name, products.price, products.stock_quantity FROM products WHERE products.price <= 5.00", function(err, res) {
+        if (err) throw err;
+        console.log(`\n Bargain Bin \n\n`)
+        for (i=0; i<res.length; i++) {
+            console.log(` ${res[i].product_name.toUpperCase()}  |  Price: $${res[i].price} |  Item ID: ${res[i].item_id}`);
+            if (res[i].stock_quantity <= 5) {
+                console.log(`\n Order Soon!  Only ${res[i].stock_quantity} left in stock! \n`)
+            };
+            console.log("--------------------------------\n");
+        };
+        buyBamazon();
+    })
 }
 
 //function that buys from Bamazon - makes the purchase, updates the database, returns that it can't proceed if not enough inventory, tells how much it costs, asks if user wants to proceed.

@@ -62,8 +62,7 @@ function newDept() {
                 message: "Enter the name of the department:",
             },
             {
-                name: "overHead",
-                
+                name: "overHead",                
                 message: "Enter the overhead cost: <123.45>",
             }
         ]).then(function(answers) {
