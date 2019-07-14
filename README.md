@@ -203,7 +203,7 @@ VALUES ("Kitchen", 999.98), ("Pharmacy/Cosmetics", 825.36), ("Outdoor", 1000), (
 
 * The department then becomes available for the manager to use to create a new product.
 
-<img src="./images.managerNewDept.PNG" alt="new department available for manager">
+<img src="./images/managerNewDept.PNG" alt="new department available for manager">
 
 
 ## Getting Started 🏁
