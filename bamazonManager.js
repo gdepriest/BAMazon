@@ -190,7 +190,7 @@ function createNew() {
                 department_name: answers.department_name, 
                 price: parseFloat(answers.price), 
                 stock_quantity: parseInt(answers.stock_quantity),
-                product_sales: 0}, function(err) {
+                product_sales: parseInt(0)}, function(err) {
                 if (err) throw err;
                 console.log(`\n\n New product successfully added: \n ${answers.product_name.toUpperCase()} - Department: ${answers.department_name} - Price: $${answers.price} - Quantity: ${answers.stock_quantity}\n\n`);
 

@@ -72,8 +72,10 @@ function shopByDept() {
                 for (i=0; i<res.length; i++) {
                     console.log(`\n Product: ${res[i].product_name.toUpperCase()} \n 
                     Price: $${res[i].price} \n 
-                    Item ID: ${res[i].item_id} \n
-                    ${res[i].stock_quantity} left in stock! \n`);
+                    Item ID: ${res[i].item_id}`);
+                    if (res[i].stock_quantity <= 5) {
+                        console.log(`\n Order Soon!  Only ${res[i].stock_quantity} left in stock! \n`)
+                    };
                     console.log("\n--------------------------------\n\n");
                 }   
               buyBamazon();
@@ -92,9 +94,12 @@ function showAll() {
     connection.query(query, function(err, res) {
         if (err) throw err;
         for (i=0; i<res.length; i++) {
-            console.log(` ${res[i].product_name.toUpperCase()}  |  Price: $${res[i].price} |  Item ID: ${res[i].item_id}   |  ${res[i].stock_quantity} left in stock \n`);
+            console.log(` ${res[i].product_name.toUpperCase()}  |  Price: $${res[i].price} |  Item ID: ${res[i].item_id}`);
+            if (res[i].stock_quantity <= 5) {
+                console.log(`\n Order Soon!  Only ${res[i].stock_quantity} left in stock! \n`)
+            };
             console.log("--------------------------------\n");
-        }
+        };
         buyBamazon();
     })
 
@@ -132,7 +137,7 @@ function buyBamazon() {
         connection.query(query1, [parseInt(answers.productID)], function(err, res) {
             if (err) throw err; 
             var stockDiff = res[0].stock_quantity - parseInt(answers.quantity);
-            var prodSales = res[0].product_sales + (parseFloat(res[0].price * parseInt(answers.quantity)).toFixed(2));
+            var prodSales = parseInt(res[0].product_sales) + parseFloat(parseFloat(res[0].price) * parseInt(answers.quantity)).toFixed(2);
             if (stockDiff < 0) {
                 console.log(`Apologies! BAMazon currently has only ${res[0].stock_quantity} ${res[0].product_name}s left in stock.  Please choose a different amount.`)
                 buyBamazon();
