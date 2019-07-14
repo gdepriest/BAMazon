@@ -73,6 +73,111 @@ connection.query("SELECT * FROM products", function(err, res) {
 
 <img src="./images/bargainBin.PNG" alt="Bargain Bin">
 
+* I then started in with my bamazonManager.js.  This app displays all products (showing sales figures), displays low inventory, adds to inventory and creates new inventory.  Product information is displayed as a table.  I thought this view was appropriate for a manager, but less so the customer.  
+
+<img src="./images/managerSeeAll.PNG" alt="manager view See All">
+
+* The View Low Inventory returns all item information for products that have 5 or fewer items in stock.
+
+<img src="./images/lowStock.PNG" alt="manager view low stock">
+
+* To add to existing inventory, the user is prompted to input the item id and quantity added.  The database is then updated with the new quantity, which makes more available for the customer to purchase.  
+
+<img src="./images/addStock.PNG" alt="manager view add stock">
+
+```javascript
+
+function stockShelves() {
+    inquirer.prompt([
+        {
+            name: "productID",
+            message: "Please enter the Item ID of the product you would like to update.",
+            validate: function(value) {
+                if (isNaN(parseInt(value)) || parseInt(value) < 1) {
+                    return "Please choose a valid Item ID.";
+                };
+
+                return true;
+            }
+        },
+        {
+            name: "quantity",
+            message: "Enter the quantity added:",
+            validate: function(value) {
+                if (isNaN(value)) {
+                    return "Please enter the number you are adding to the BAMazon stock"
+                };
+                
+                return true;
+            },
+        }
+    ]).then(function(answers) {
+
+        var query3 = "SELECT * FROM products WHERE products.item_id = ?";
+        var query4 = "UPDATE products SET ? WHERE products.item_id = ?";
+
+        connection.query(query3, [(parseInt(answers.productID))], function(err, res) {
+            if (err) throw err;
+
+            var stockUpdate = res[0].stock_quantity + parseInt(answers.quantity)
+
+            console.log(`There are currently ${res[0].stock_quantity} of ${res[0].product_name}.  Your addition of ${answers.quantity} will make ${stockUpdate}.`);
+            inquirer.prompt({
+                name: "updateConfirm",
+                message: "Do you want to proceed?",
+                type: "confirm",
+                default: true,
+            }).then(function(answer) {
+
+                if (answer.updateConfirm) {                        
+                    connection.query(query4, [{stock_quantity: stockUpdate }, parseInt(answers.productID)], function(err, res) {
+                        if (err) throw err;
+
+                        console.log(`\n*****************************\n Product stock updated to ${stockUpdate}. \n*****************************\n`);
+                        mainMenu();
+                        
+                    });
+    
+                } else {
+                    mainMenu();
+                };
+
+            })
+        })
+
+
+    })
+}        
+
+```
+
+* Creating a new product is essentially creating a new row in the products table.  The user submits the product information, adding name, choosing from the list of departments available, adding price and quantity.  The price question is currently only validating for when a user doesn't input a number.  I would like to make it in the future so it validates around a decimal input as 123.45.  
+
+<img src="./images/addNewProduct.gif" alt="shop by department demonstration" width="600px">
+
+* The product is added to the products table.
+
+```javascript
+connection.query("INSERT INTO products SET ?", {
+                product_name: answers.product_name, 
+                department_name: answers.department_name, 
+                price: parseFloat(answers.price), 
+                stock_quantity: parseInt(answers.stock_quantity),
+                product_sales: parseInt(0)}, function(err) {
+                if (err) throw err;
+                console.log(`\n\n New product successfully added: \n ${answers.product_name.toUpperCase()} - Department: ${answers.department_name} - Price: $${answers.price} - Quantity: ${answers.stock_quantity}\n\n`);
+```
+
+* The product added becomes available to the customer.
+
+<img src="./images/newProduct.PNG" alt="new product added for customer to buy">
+
+
+
+
+
+
+
 
 
 
