@@ -60,97 +60,36 @@ connection.query("SELECT * FROM products", function(err, res) {
 
 *  The user is then able to see the list of available products under that department.  When the product has fewer than 5 in inventory, customers see the order soon message with how many products are left in inventory.
 
-<img src="./images/orderSoon.png" alt="Order Soon message">
+<img src="./images/orderSoon.PNG" alt="Order Soon message">
 
 
 * I then run my buyBamazon function, which first prompts the user with the Item ID of the product they want to purchase, then the quantity they would like to order.  The user confirms their order after seeing the price, and the database is updated - with the new figures for stock quantity and product sales.  If the user inputs a quantity greater than is available in stock, they receive a message to select fewer.
 
 <img src="./images/shopByDept.gif" alt="shop by department demonstration" width="600px">
 
-* When the user makes the initial selection, a switch case handles the user input and results in running different functions.  For the concert, movie or song, the user is then prompted with another question - which artist, movie or song would you like to know more about?  
+* The See All Products and Bargain Bin run in a similar way.  The See All shows all products available for purchase, and the Bargain Bin filters the response by items that have a price that is less than or equal to 5.00.  Both run the buyBamazon function, which prompts the user for the item id and the quantity.
 
-```
-switch(command) {
-    case "Spotify This":
-        return spotifyThis();
-    case "Concert This":
-        return concertThis();
-    case "Movie This":
-        return movieThis();
-    case "A Walk on the Wild Side":
-        return  doWhatItSays();
-    default:
-        return console.log("make a better choice")
-};
-    
+<img src="./images/seeAll.PNG" alt="See All Products">
 
-function spotifyThis() {
-    inquirer.prompt([
-        {
-            name: "whatSong",
-            message: "What song would you like to know more about?"
-        }
-    ]).then(function(answer) {
-        userInput = `"${answer.whatSong}"`;    
-
-        spotThis(userInput);
-        
-        
-    });
-};
-
-```
-
-* The user then can type-in their query, and the app will return :
-    - Song Information - the most relevant (according to Spotify) artist, album and Spotify song preview URL, for the song that the user searches.
-    <img src="./images/spotify-return.PNG" alt="screen capture of Spotify This return for the song Barely Legal, by the Strokes">
-
-    - Upcoming Concerts - the upcoming concert venues, location, date and time, for the artist that the user searches.  Note, there are no returns for artists that aren't touring or aren't in the BandsInTown API. 
-    <img src="./images/bands-return.PNG" alt="screen capture of Concert This return for The Flaming Lips">
- 
-    - Movie Information - the title, year, IMDB & Rotten Tomato ratings, country, language, plot and actors, for the movie that a user searches.  This uses OMDB.
-    <img src="./images/movie-return.PNG" alt="screen capture of Movie This return for the movie Us">
+<img src="./images/bargainBin.PNG" alt="Bargain Bin">
 
 
-* The Walk on the Wild Side option reads my random.txt file.  My tutor helped me to use eval(), instead of another switch case, to run my (already-created) functions.  This method works by turning the first part of the random.txt (movThis, conThis or spotThis) into functions - thereby accessing my functions and returning the redefined userInput variable, which uses the second part (after the comma) of my random.txt.  
 
-```
-function doWhatItSays() {
-    fs.readFile(randText, "utf8", function(error, data) {
-        if (error) return console.log(error);
 
-        var dataArray = data.split(", ");
-        var liriCommand = eval(dataArray[0]);
-        console.log(liriCommand);
 
-        userInput = dataArray[1];
-        liriCommand(userInput);
-                    
 
-    });
-};
 
-```
-
-* In this case, my random.txt file specifies a movie query, using the movThis command.  If you'd like to try different commands within random.txt, you can use conThis for Concert This, or spotThis for Spotify This.
-
-* A REALLY IMPORTANT NOTE - if you are trying conThis within the random.txt, you need to remove the quotes from your query, as demonstrated in the following picture:
-    - <img src="./images/random-text.PNG" alt="screen capture of necessary input for random.txt for concert returns">
-    - This is because the BandsInTown API doesn't like the quotes for the purposes of its query.  
-
-* Liri will continue to run after creating returns, since it is called within each function.  I experimented with Q to Quit within Inquirer, but couldn't get it to work, so I specify the usual way to exit - ctrl-C.  
 
 
 ## Getting Started 🏁
 
 These instructions will get you a copy of the project up and running on your local machine for grading and testing purposes. 
 
-1. You will need a Spotify API key and secret, saved in a .env file in order for this app to function.
-2. clone repository. 
-3. open repository in your IDE of choice.
-4. Install node packages specified in the package.json - axios, dotenv, inquirer, moment, node-spotify-api.
-5. Open the liri-node-app in Bash.
-4. Run node liri.js.
+1. Clone repository. 
+3. Open repository in your IDE of choice.
+4. Install node packages specified in the package.json - inquirer, mysql.
+5. Open MySQL workbench, and create the database and tables using the seeds.sql document.
+4. Open Bash or Terminal, run ```node bamazonCustomer.js```, ```node bamazonManager.js``` or ```node bamazonSupervisor.js```.
 
 
 
