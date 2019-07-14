@@ -1,12 +1,14 @@
 # BAMazon 🛒
 
 BAMazon is a series of 3 Node apps that use MySQL.  The customer app takes orders from customers and depletes from the store inventory.  The manager app tracks sales and offers the ability to create new products and add to existing inventory.  The supervisor app allows the user to track sales by department and create new departments.
+
 <img src="./images/bamazonCapture.PNG" alt="screen capture of game">
 
 ## Functionality 💪
 #### Here's how I created the app: 
 
-* I started by creating the MySQL database for BAMazon, and created a table with my initial products.
+* I started by creating the MySQL database for BAMazon, and created a table with my initial products.  My product list is centered on the idea of useless things in 2019.  I suppose my take on this and the resulting inventory is debatable.  
+
 ```mysql
 DROP DATABASE IF EXISTS bamazonDB;
 CREATE database bamazonDB;
@@ -29,39 +31,36 @@ VALUES ("VHS Tape Rewinder", "Electronics", 690.99, 45, 0),
 ("Pager", "Electronics", 699.99, 75, 0), 
 ```
 
-<img src="./images/sc-1.PNG" alt="screen capture of setting up variables">
+* I then created my bamazonCustomer.js file, established the connection with my database and built-out the functions necessary for running the app.  The customer is first prompted, using inquirer, how they would like to shop - whether by department, see all products, bargain bin, or exit.  Note: Bargain Bin was added at the very end, to reflect how I like to shop.
 
-* The functions that make calls to the different APIs are then listed - movThis, spotThis, and conThis, making calls to the OMDB, Spotify, and BandsInTown APIs, respectively.
+* When customers shop by department, they are prompted with the list of departments.  While this was originally hard-coded with the departments I knew to exist, I later realized this had to be accomplished by accessing the products table in order to update with new departments and products as they came available via the manager and supervisor apps.  The following snippet shows how I removed duplicates from that list of departments from my products table, to display within the inquirer prompt. 
 
-```
-function spotThis(userInput) {
-    spotify.search(
-        { 
-            type: 'track', 
-            query: userInput,
-        }, 
-        function(err, data) {
-            if (err) {
-                return console.log('Error occurred: ' + err);
-            };
+```javascript
+connection.query("SELECT * FROM products", function(err, res) {
+        if (err) throw err;
 
-            
-            var songInfo = data.tracks.items[0];
-            console.log(spacing);
-            console.log(`${songInfo.name} \n\n Artist: ${songInfo.artists[0].name} \n\n Album : ${songInfo.album.name} \n\n Preview: ${songInfo.preview_url}`);
-            console.log(spacing);
+        inquirer.prompt({
+            type: "list",
+            name: "department",
+            message: "Please choose a department from the following list:",
+            choices: function() {
 
-            liri();
+                var departments = res.map(function(product) {
+                    return product.department_name
+                });
+                
 
-        });
-};
+                return departments.filter(function(item, index){
+                    return departments.indexOf(item) >= index;
+                });
+            }
+        })
 
 ```
 
-* The liri function is the game function, which gets the user started with the first inquirer question - asking that a command be selected from the list of options.  I had a lot of issues with this question repeating itself when selecting using the down arrow - almost like I had something recursive in my code - but I found that by shortening the message of the question (which is probably good to do anyway, right?), I was able to eliminate that problem.  The user can pick from the following commands: Spotify This, Concert This, Movie This, or A Walk on the Wild Side.
+*  The user is then able to see the list of available products under that department.  When the product has fewer than 5 in inventory, customers see the order soon message with how many products are left in inventory.  I then run my buyBamazon function, which first prompts the user with the Item ID of the product they want to purchase, then the quantity they would like to order.  The user confirms their order after seeing the price, and the database is updated - with the new figures for stock quantity and product sales.  
 
-<img src="./images/inquirerq1.PNG" alt="screen capture inquirer question 1">
-
+<img src="./images/shopByDept.gif" alt="shop by department demonstration">
 
 * When the user makes the initial selection, a switch case handles the user input and results in running different functions.  For the concert, movie or song, the user is then prompted with another question - which artist, movie or song would you like to know more about?  
 
