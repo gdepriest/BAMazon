@@ -60,12 +60,12 @@ connection.query("SELECT * FROM products", function(err, res) {
 
 *  The user is then able to see the list of available products under that department.  When the product has fewer than 5 in inventory, customers see the order soon message with how many products are left in inventory.
 
-<img src="./images/orderSoon.png" alt="Order Soon message" margin="auto">
+<img src="./images/orderSoon.png" alt="Order Soon message">
 
 
 * I then run my buyBamazon function, which first prompts the user with the Item ID of the product they want to purchase, then the quantity they would like to order.  The user confirms their order after seeing the price, and the database is updated - with the new figures for stock quantity and product sales.  If the user inputs a quantity greater than is available in stock, they receive a message to select fewer.
 
-<img src="./images/shopByDept.gif" alt="shop by department demonstration" width="550px" margin="auto">
+<img src="./images/shopByDept.gif" alt="shop by department demonstration" width="600px">
 
 * When the user makes the initial selection, a switch case handles the user input and results in running different functions.  For the concert, movie or song, the user is then prompted with another question - which artist, movie or song would you like to know more about?  
 
