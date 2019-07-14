@@ -168,22 +168,42 @@ connection.query("INSERT INTO products SET ?", {
                 console.log(`\n\n New product successfully added: \n ${answers.product_name.toUpperCase()} - Department: ${answers.department_name} - Price: $${answers.price} - Quantity: ${answers.stock_quantity}\n\n`);
 ```
 
-* The product added becomes available to the customer.
+* The product is added to the database and becomes available to the customer.
+
+<img src="./images/productAddedTable.PNG" alt="new product as seen on manager's table">
 
 <img src="./images/newProduct.PNG" alt="new product added for customer to buy">
 
+* I then created the bamazonSupervisor.js app.  This app requires a new table - departments - in the bamazon database.  I created the starter information for that - which includes overhead costs, a dummy amount.
+
+```mysql
+
+USE bamazonDB;
+
+CREATE TABLE departments (
+  department_id INT NOT NULL AUTO_INCREMENT,
+  department_name VARCHAR(100) NOT NULL,
+  over_head_costs DECIMAL(15,2) NOT NULL,
+  PRIMARY KEY (department_id)
+);
+
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ("Kitchen", 999.98), ("Pharmacy/Cosmetics", 825.36), ("Outdoor", 1000), ("Services", 2555.69), ("Movies, Music & Games", 899.67), ("Electronics", 1452.36), ("Travel", 799.420), ("Accessories", 5666.32);
 
 
+```
 
+* The supervisor has the ability to see product sales by department and create a new department.  To show the product sales by department, I had to join my two tables get the information displaying in the way I wanted.  I knew I was missing something, because all of of the join methods I attempted showed all the products and all the sales, and didn't group those product sales up by department.  Of course, there's a built-in method for that - SUM().  I also needed to use aliases on a couple of the columns.  With the help of our TAs at the homework review session, I was able to get that sorted out.
 
+<img src="./images/salesByDept.PNG" alt="sales by department supervisor view">
 
+* The create new department is carried out just like the create new product function in the manager mode.  The supervisor is asked to input the new department and the overhead cost.  The user information is used to create a new row in the departments table.  
 
+<img src="./images/newDeptAdded.PNG" alt="New department added supervisor mode">
 
+* The department then becomes available for the manager to use to create a new product.
 
-
-
-
-
+<img src="./images.managerNewDept.PNG" alt="new department available for manager">
 
 
 ## Getting Started 🏁
